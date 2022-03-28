@@ -9,6 +9,12 @@ import { RankPointsCalculator } from "./rank-points-calculator.helper";
 import { RiotDataFetcher } from "./riot-data-fetcher.helper";
 
 export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
+  actionTrigger: string;
+  
+  constructor(actionTrigger: string){
+    this.actionTrigger = actionTrigger;
+  }
+
   names = [
     "Percatinha",
     "odeio aquela cor",
@@ -24,7 +30,7 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
   ];
 
   async execute(message: Message<boolean>) {
-    if (message.content === "@playersRank") {
+    if (message.content === this.actionTrigger) {
       let data = "";
       let i = 1;
       const players = await this.getRank(this.names, message);
@@ -47,6 +53,7 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
 
 
     for (const summoner of summoners) {
+      console.log(`[${summoner}] Fetching data`);
       const summonerAccountInfo = await riotDataFetcher.getSummonerInfo(summoner);
       if(!summonerAccountInfo) {
         message.reply(`No data available for ${summoner}`)
@@ -59,6 +66,7 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
         message.reply(`No queue data available from ${summoner}`);
       }
 
+      console.log(`[${summoner}] Calculating ranking points`)
       const playerRankPoints = rankPointsCalculator.calculateSummonerPoints(summonerQueueData);
 
       playersRankData.push(playerRankPoints);

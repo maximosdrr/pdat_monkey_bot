@@ -12,7 +12,6 @@ export class Bot {
     this.registerOnMessageReceiveActions(client, onMessageReceiveActions);
 
     client.login(AppConfig.botToken);
-    console.log(AppConfig.botToken)
 
     console.log("Pdat team monkey is running 🐵🐵")
   }

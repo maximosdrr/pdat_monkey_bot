@@ -1,6 +1,6 @@
 import DiscordJs, { Client, Intents } from "discord.js";
-import { AppConfig } from "../config/env";
-import { OnMessageReceiveActionCreator } from "../interfaces";
+import { AppConfig } from "./config/env";
+import { OnMessageReceiveActionCreator } from "./actions/onMessageReceive/interfaces";
 import onMessageReceiveActions from "./actions/onMessageReceive";
 
 export class Bot {
@@ -13,7 +13,7 @@ export class Bot {
 
     client.login(AppConfig.botToken);
 
-    console.log("Pdat team monkey is running 🐵🐵")
+    console.log("Pdat team monkey is running 🐵🐵");
   }
 
   private registerOnMessageReceiveActions(

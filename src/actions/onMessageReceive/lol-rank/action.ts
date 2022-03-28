@@ -1,17 +1,19 @@
-import { Player } from "@prisma/client";
 import axios from "axios";
 import { Message } from "discord.js";
-import { AppConfig } from "../../../../config/env";
-import { prismaClient } from "../../../../database/prisma.orm";
+import { riotGamesRepository } from "../../../repositories/riot-games/riot-games.repository";
+import { ISummoner } from "../../../repositories/summoner/summoner.entity";
+import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
+import { MessageUtils } from "../../../utils/message.utils";
 
-import { OnMessageReceiveActionCreator } from "../../../../interfaces";
+import { OnMessageReceiveActionCreator } from "../interfaces";
 import { RankBuilder } from "./helpers/build-rank.helper";
 import { RankPointsCalculator } from "./helpers/rank-points-calculator.helper";
-import { RiotDataFetcher } from "./helpers/riot-data-fetcher.helper";
 import { SummonerRankData } from "./interfaces/interfaces";
 
 export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
   actionTrigger: string;
+  summonerRepository = summonerRepository;
+  riotRepository = riotGamesRepository;
 
   constructor(actionTrigger: string) {
     this.actionTrigger = actionTrigger;
@@ -19,14 +21,14 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
 
   async execute(message: Message<boolean>) {
     if (message.content.includes(this.actionTrigger)) {
-      const guildId = this.getGuildId(message);
+      const guildId = MessageUtils.getGuildId(message);
 
       if (!guildId) {
         message.reply("Guild id not provided");
         return;
       }
 
-      const players = await this.getPlayers(guildId);
+      const players = await this.summonerRepository.getAll(guildId);
 
       if (players.error) {
         message.reply(`Something went wrong ${players.message}`);
@@ -36,6 +38,12 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
       const playersName = this.getPlayersNames(players.data);
 
       const summonersRankData = await this.getRank(playersName, message);
+
+      if (!summonersRankData.length) {
+        message.reply("No data available yet");
+        return;
+      }
+
       const messageResponse = this.formatMessage(summonersRankData);
 
       message.reply(messageResponse);
@@ -54,27 +62,22 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
     return data;
   }
 
-  getGuildId(message: Message<boolean>) {
-    return message?.guild?.id;
-  }
-
   private async getRank(summoners: string[], message: Message<boolean>) {
     const playersRankData: SummonerRankData[] = [];
 
     const rankPointsCalculator = new RankPointsCalculator();
     const rankBuilder = new RankBuilder();
-    const riotDataFetcher = new RiotDataFetcher();
 
     for (const summoner of summoners) {
       console.log(`[${summoner}] Fetching data`);
-      const summonerAccountInfo = await riotDataFetcher.getSummonerInfo(
+      const summonerAccountInfo = await this.riotRepository.getSummonerInfo(
         summoner
       );
       if (!summonerAccountInfo) {
         message.reply(`No data available for ${summoner}`);
       }
 
-      const summonerQueueData = await riotDataFetcher.getSummonerLeagueData(
+      const summonerQueueData = await this.riotRepository.getSummonerLeagueData(
         summonerAccountInfo
       );
 
@@ -92,21 +95,7 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
     return rankBuilder.buildRank(playersRankData);
   }
 
-  getPlayersNames(players: Player[]) {
+  getPlayersNames(players: ISummoner[]) {
     return players.map((p) => p.summonerName);
-  }
-
-  async getPlayers(guildId: string) {
-    try {
-      const players = await prismaClient.player.findMany({
-        where: {
-          guildId: guildId,
-        },
-      });
-
-      return { data: players, message: "Found", error: false };
-    } catch (e) {
-      return { data: [], message: e.message, error: true };
-    }
   }
 }

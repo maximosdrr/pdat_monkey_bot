@@ -1,4 +1,4 @@
-import { Bot } from "./bot/bot";
+import { Bot } from "./bot";
 import { prismaClient } from "./database/prisma.orm";
 
 async function main() {

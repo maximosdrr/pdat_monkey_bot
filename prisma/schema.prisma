@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Player {
+model Summoner {
   id           Int    @id @default(autoincrement())
   summonerName String
   guildId      String

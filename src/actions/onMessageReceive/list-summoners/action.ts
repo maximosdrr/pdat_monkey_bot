@@ -1,12 +1,13 @@
 import { Message } from "discord.js";
-import { ISummoner } from "../../../repositories/summoner/summoner.entity";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
 import { OnMessageReceiveActionCreator } from "../interfaces";
+import { MessageFormatter } from "./message-formatter";
 
 export class LolRankListPlayers implements OnMessageReceiveActionCreator {
   actionTrigger: string;
   summonerRepository = summonerRepository;
+  formatter = new MessageFormatter();
 
   constructor(trigger: string) {
     this.actionTrigger = trigger;
@@ -33,20 +34,10 @@ export class LolRankListPlayers implements OnMessageReceiveActionCreator {
         return;
       }
 
-      const messageResponse = this.formatPlayers(playersResult.data);
+      const messageResponse = this.formatter.formatMessage(playersResult.data);
 
       message.reply(messageResponse);
       return;
     }
-  }
-
-  formatPlayers(players: ISummoner[]): string {
-    let data = "";
-
-    for (const player of players) {
-      data += `Id: ${player.id} - Summoner Name: ${player.summonerName}\n`;
-    }
-
-    return data;
   }
 }

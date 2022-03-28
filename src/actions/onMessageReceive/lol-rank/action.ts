@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Message } from "discord.js";
 import { riotGamesRepository } from "../../../repositories/riot-games/riot-games.repository";
 import { ISummoner } from "../../../repositories/summoner/summoner.entity";
@@ -8,12 +7,14 @@ import { MessageUtils } from "../../../utils/message.utils";
 import { OnMessageReceiveActionCreator } from "../interfaces";
 import { RankBuilder } from "./helpers/build-rank.helper";
 import { RankPointsCalculator } from "./helpers/rank-points-calculator.helper";
-import { SummonerRankData } from "./interfaces/interfaces";
+import { SummonerRankData } from "./interfaces";
+import { MessageFormatter } from "./message-formatter";
 
 export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
   actionTrigger: string;
   summonerRepository = summonerRepository;
   riotRepository = riotGamesRepository;
+  messageFormatter = new MessageFormatter();
 
   constructor(actionTrigger: string) {
     this.actionTrigger = actionTrigger;
@@ -44,22 +45,11 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
         return;
       }
 
-      const messageResponse = this.formatMessage(summonersRankData);
+      const messageResponse =
+        this.messageFormatter.formatMessage(summonersRankData);
 
       message.reply(messageResponse);
     }
-  }
-
-  private formatMessage(players: SummonerRankData[]) {
-    let data = "";
-    let i = 1;
-
-    for (const player of players) {
-      data += `⭐ ${i} - ${player.summonerName} = ${player.points}\n`;
-      i += 1;
-    }
-
-    return data;
   }
 
   private async getRank(summoners: string[], message: Message<boolean>) {

@@ -2,7 +2,7 @@ import {
   ISummonerQueueData,
   QueueTypes,
 } from "../../../../repositories/riot-games/summoner-queue-data.entity";
-import { SummonerRankData } from "../interfaces/interfaces";
+import { SummonerRankData } from "../interfaces";
 
 export class RankPointsCalculator {
   private getQueueData(

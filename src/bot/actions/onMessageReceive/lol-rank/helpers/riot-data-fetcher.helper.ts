@@ -1,5 +1,5 @@
-import { AppConfig } from "../../../../config/env";
-import { SummonerAccountInfo, SummonerQueueData } from "./interfaces";
+import { AppConfig } from "../../../../../config/env";
+import { SummonerAccountInfo, SummonerQueueData } from "../interfaces/interfaces";
 
 import axios from 'axios';
 

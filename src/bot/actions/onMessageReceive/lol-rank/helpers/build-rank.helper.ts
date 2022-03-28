@@ -1,4 +1,4 @@
-import {  SummonerRankData } from "./interfaces";
+import {  SummonerRankData } from "../interfaces/interfaces";
 
 export class RankBuilder {
   buildRank(playersQueueData: SummonerRankData[]): SummonerRankData[] {

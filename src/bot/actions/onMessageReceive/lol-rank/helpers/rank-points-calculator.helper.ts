@@ -1,4 +1,4 @@
-import {  QueueTypes, SummonerQueueData, SummonerRankData } from "./interfaces";
+import {  QueueTypes, SummonerQueueData, SummonerRankData } from "../interfaces/interfaces";
 
 export class RankPointsCalculator {
     private getQueueData(queueType: QueueTypes, playerQueueInfo: SummonerQueueData[]) {

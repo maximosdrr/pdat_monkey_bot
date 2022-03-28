@@ -1,7 +1,9 @@
 import { Bot } from "./bot/bot";
+import { prismaClient } from "./database/prisma.orm";
 
-function main() {
+async function main() {
   const bot = new Bot();
+  await prismaClient.$connect();
 
   bot.run();
 }

@@ -14,3 +14,22 @@ services:
     ports:
       - "4000:4000"
     command: yarn start:dev
+    networks:
+      - pdat_monkey
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - pdat_monkey
+volumes:
+  db:
+    driver: local
+networks:
+  pdat_monkey:

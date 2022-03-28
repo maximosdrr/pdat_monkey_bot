@@ -1,4 +1,4 @@
-export interface IGetSummonerByNameResponse {
+export interface SummonerAccountInfo {
   id: string;
   accountId: string;
   puuid: string;
@@ -8,7 +8,7 @@ export interface IGetSummonerByNameResponse {
   summonerLevel: number;
 }
 
-export interface IGetSummonerDataResponse {
+export interface SummonerQueueData {
   leagueId: string;
   queueType: string;
   tier: string;
@@ -24,7 +24,7 @@ export interface IGetSummonerDataResponse {
   hotStreak: boolean;
 }
 
-export interface IRankData extends IGetSummonerDataResponse {
+export interface SummonerRankData extends SummonerQueueData {
   points: number;
 }
 

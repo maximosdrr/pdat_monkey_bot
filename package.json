@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/main.ts",
+    "start:prod": "npx prisma generate && yarn start",
     "start:dev": "nodemon src/main.ts",
+    "start": "yarn build && node ./dist/main.js",
     "build": "tsc -p ."
   },
   "keywords": [],

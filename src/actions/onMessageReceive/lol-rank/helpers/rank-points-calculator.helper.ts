@@ -25,9 +25,8 @@ export class RankPointsCalculator {
         losses: soloDualInfo.losses + soloDualInfo.losses,
         rank: `Solo Dual ${soloDualInfo.rank} | Flex: ${flexInfo.rank}`,
         points:
-          flexInfo.wins +
-          soloDualInfo.wins * 3 -
-          (flexInfo.losses + soloDualInfo.losses * 2),
+          (flexInfo.wins + soloDualInfo.wins) * 3 -
+          (flexInfo.losses + soloDualInfo.losses) * 2,
       };
     }
 

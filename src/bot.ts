@@ -1,16 +1,20 @@
 import DiscordJs, { Client, Intents } from "discord.js";
-import { OnMessageReceiveActionCreator } from "../interfaces";
+import { AppConfig } from "./config/env";
+import { OnMessageReceiveActionCreator } from "./actions/onMessageReceive/interfaces";
 import onMessageReceiveActions from "./actions/onMessageReceive";
 
 export class Bot {
-  public run(token: string) {
+  public run() {
     const client = new DiscordJs.Client({
       intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
     });
 
+
     this.registerOnMessageReceiveActions(client, onMessageReceiveActions);
 
-    client.login(token);
+    client.login(AppConfig.botToken);
+
+    console.log("Pdat team monkey is running 🐵🐵");
   }
 
   private registerOnMessageReceiveActions(

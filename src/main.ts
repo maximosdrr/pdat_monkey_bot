@@ -1,13 +1,11 @@
-import { Bot } from "./bot/bot";
-import { AuthServer } from "./bot/auth-server";
-import { AppConfig } from "./config/env";
+import { Bot } from "./bot";
+import { prismaClient } from "./database/prisma.orm";
 
-function main() {
+async function main() {
   const bot = new Bot();
-  const authServer = new AuthServer();
+  await prismaClient.$connect();
 
-  authServer.runServer();
-  bot.run(AppConfig.botToken);
+  bot.run();
 }
 
 main();

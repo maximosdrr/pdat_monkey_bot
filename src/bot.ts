@@ -9,6 +9,7 @@ export class Bot {
       intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
     });
 
+
     this.registerOnMessageReceiveActions(client, onMessageReceiveActions);
 
     client.login(AppConfig.botToken);

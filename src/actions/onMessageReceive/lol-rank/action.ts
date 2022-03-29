@@ -1,20 +1,17 @@
 import { Message } from "discord.js";
-import { riotGamesRepository } from "../../../repositories/riot-games/riot-games.repository";
 import { ISummoner } from "../../../repositories/summoner/summoner.entity";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
 
 import { OnMessageReceiveActionCreator } from "../interfaces";
 import { RankBuilder } from "./helpers/build-rank.helper";
-import { RankPointsCalculator } from "./helpers/rank-points-calculator.helper";
-import { SummonerRankData } from "./interfaces";
 import { MessageFormatter } from "./message-formatter";
 
 export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
   actionTrigger: string;
   summonerRepository = summonerRepository;
-  riotRepository = riotGamesRepository;
   messageFormatter = new MessageFormatter();
+  rankBuilder = new RankBuilder();
 
   constructor(actionTrigger: string) {
     this.actionTrigger = actionTrigger;
@@ -29,16 +26,15 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
         return;
       }
 
-      const players = await this.summonerRepository.getAll(guildId);
+      const summoners = await this.summonerRepository.getAll(guildId);
 
-      if (players.error) {
-        message.reply(`Something went wrong ${players.message}`);
+      if (summoners.error) {
+        message.reply(`Something went wrong ${summoners.message}`);
         return;
       }
 
-      const playersName = this.getPlayersNames(players.data);
-
-      const summonersRankData = await this.getRank(playersName, message);
+      const playersNames = this.getPlayersNames(summoners.data);
+      const summonersRankData = await this.rankBuilder.buildRank(playersNames, message);
 
       if (!summonersRankData.length) {
         message.reply("No data available yet");
@@ -50,39 +46,6 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
 
       message.reply(messageResponse);
     }
-  }
-
-  private async getRank(summoners: string[], message: Message<boolean>) {
-    const playersRankData: SummonerRankData[] = [];
-
-    const rankPointsCalculator = new RankPointsCalculator();
-    const rankBuilder = new RankBuilder();
-
-    for (const summoner of summoners) {
-      console.log(`[${summoner}] Fetching data`);
-      const summonerAccountInfo = await this.riotRepository.getSummonerInfo(
-        summoner
-      );
-      if (!summonerAccountInfo) {
-        message.reply(`No data available for ${summoner}`);
-      }
-
-      const summonerQueueData = await this.riotRepository.getSummonerLeagueData(
-        summonerAccountInfo
-      );
-
-      if (!summonerQueueData) {
-        message.reply(`No queue data available from ${summoner}`);
-      }
-
-      console.log(`[${summoner}] Calculating ranking points`);
-      const playerRankPoints =
-        rankPointsCalculator.calculateSummonerPoints(summonerQueueData);
-
-      playersRankData.push(playerRankPoints);
-    }
-
-    return rankBuilder.buildRank(playersRankData);
   }
 
   getPlayersNames(players: ISummoner[]) {

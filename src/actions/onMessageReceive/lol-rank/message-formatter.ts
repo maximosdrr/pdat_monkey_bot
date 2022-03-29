@@ -1,12 +1,12 @@
 import { SummonerRankData } from "./interfaces";
 
 export class MessageFormatter {
-  formatMessage(players: SummonerRankData[]) {
+  formatMessage(summoners: SummonerRankData[]) {
     let data = "";
     let i = 1;
 
-    for (const player of players) {
-      data += `⭐ ${i} - ${player.summonerName} = ${player.points}\n`;
+    for (const summoner of summoners) {
+      data += `⭐ ${i} - ${summoner.summonerName} = ${summoner.points}\n`;
       i += 1;
     }
 

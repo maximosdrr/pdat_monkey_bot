@@ -7,4 +7,6 @@ COPY yarn.lock ./
 
 RUN yarn
 
+RUN npx prisma generate
+
 COPY . .

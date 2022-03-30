@@ -2,20 +2,19 @@ version: "3.7"
 
 services:
   pdat_monkey:
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/home/node/app
     container_name: pdat_monkey
-    env_file:
-      - .env
     ports:
       - "4000:4000"
-    command: yarn start:dev
+    command: yarn start:prod
     networks:
       - pdat_monkey
   postgres:
+    container_name: pdat_monkey_postgres
     image: postgres:14.1-alpine
     restart: always
     env_file:

@@ -28,6 +28,8 @@ export class GetHelp implements OnMessageReceiveActionCreator {
   }
 
   registerHelpMessage() {
-    helpMessages.push(`Todos os comandos devem começar com `);
+    helpMessages.push(
+      `Todos os comandos devem começar com ${AppConfig.commands.prefix}`
+    );
   }
 }

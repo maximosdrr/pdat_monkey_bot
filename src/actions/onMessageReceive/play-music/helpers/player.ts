@@ -65,7 +65,7 @@ export class SongPlayer {
     this.subscription = this.connection.subscribe(this.audioPlayer);
 
     this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
-      if (this.songQueue.isEmpty) {
+      if (this.songQueue.isEmpty()) {
         this.stop(message);
       }
 

@@ -79,6 +79,16 @@ export class SongPlayer {
     this.connection = VoiceManager.getConnection(message);
     this.subscription = this.connection.subscribe(this.audioPlayer);
 
+    this.audioPlayer.on("error", async (err) => {
+      this.stop(message);
+
+      await message.channel.send(
+        `Error caught when play song, stopping music ${err.message}`
+      );
+
+      console.log(err);
+    });
+
     this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
       if (this.songQueue.isEmpty()) {
         this.stop(message);

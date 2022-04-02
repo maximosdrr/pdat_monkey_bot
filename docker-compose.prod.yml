@@ -2,6 +2,8 @@ version: "3.7"
 
 services:
   pdat_monkey:
+    depends_on:
+      - postgres
     env_file:
       - .env
     build:
@@ -13,6 +15,9 @@ services:
     command: yarn start:prod
     networks:
       - pdat_monkey
+    volumes:
+      - ./src:/home/node/app/src
+
   postgres:
     container_name: pdat_monkey_postgres
     image: postgres:14.1-alpine

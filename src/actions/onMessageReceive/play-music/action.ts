@@ -22,7 +22,10 @@ export class PlayMusic implements OnMessageReceiveActionCreator {
   async execute(message: Message<boolean>) {
     if (message.content.includes(this.actionTrigger)) {
       const song = await this.songFinder.getSong(this.actionTrigger, message);
-      this.player.play(message, song);
+
+      if (song) {
+        this.player.play(message, song);
+      }
     }
 
     if (message.content.includes(this.stop)) {

@@ -6,24 +6,22 @@ import { ISong } from "../interfaces";
 
 export class SongFinder {
   async getSong(trigger: string, message: Message<boolean>): Promise<ISong> {
-    const songUrl = await this.getSongUrl(trigger, message);
-    const songInfo = await ytdl.getInfo(songUrl);
+    try {
+      const songUrl = await this.getSongUrl(trigger, message);
+      const songInfo = await ytdl.getInfo(songUrl);
 
-    if (!songInfo) {
+      const songDuration = this.getSongDuration(songInfo);
       return {
-        title: "NOT FOUND",
-        url: AppConfig.defaultSong,
-        duration: 1,
+        url: songUrl,
+        title: songInfo?.videoDetails?.title ?? "NOT FOUND",
+        duration: songDuration,
       };
+    } catch (e) {
+      message.reply(
+        `Cannot add this song to queue reason ${e.message ?? "Unknown"}`
+      );
+      return null;
     }
-
-    const songDuration = this.getSongDuration(songInfo);
-
-    return {
-      url: songUrl,
-      title: songInfo?.videoDetails?.title ?? "NOT FOUND",
-      duration: songDuration,
-    };
   }
 
   private getSongDuration(details: videoInfo) {

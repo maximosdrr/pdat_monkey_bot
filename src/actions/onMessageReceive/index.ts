@@ -9,7 +9,7 @@ const Actions = [
   new LolRankAddGuildPlayer("@addSummoner"),
   new LolRankListPlayers("@listSummoners"),
   new LolRankRemoveGuildPlayer("@deleteSummoner"),
-  new PlayMusic({ play: "@play", skip: "@skip", stop: "@stop" }),
+  new PlayMusic({ play: "@play", next: "@next", stop: "@stop" }),
 ];
 
 export default Actions;

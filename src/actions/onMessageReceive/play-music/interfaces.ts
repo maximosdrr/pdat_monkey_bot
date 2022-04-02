@@ -9,6 +9,7 @@ import {
 export interface ISong {
   title: string;
   url: string;
+  duration: number;
 }
 
 export type ChannelText =

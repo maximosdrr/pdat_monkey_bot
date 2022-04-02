@@ -5,24 +5,29 @@ import { SongFinder } from "./helpers/song-finder";
 
 export class PlayMusic implements OnMessageReceiveActionCreator {
   songFinder = new SongFinder();
+  player = new SongPlayer();
   actionTrigger: string;
   stop: string;
-  skip: string;
+  next: string;
 
-  constructor({ play, stop, skip }) {
+  constructor({ play, stop, next }) {
     this.actionTrigger = play;
     this.stop = stop;
-    this.skip = skip;
+    this.next = next;
   }
 
   async execute(message: Message<boolean>) {
     if (message.content.includes(this.actionTrigger)) {
       const song = await this.songFinder.getSong(this.actionTrigger, message);
-      const player = new SongPlayer();
+      this.player.play(message, song);
+    }
 
-      player.playSong(message, song);
+    if (message.content.includes(this.stop)) {
+      this.player.stop(message);
+    }
 
-      message.reply(song.title);
+    if (message.content.includes(this.next)) {
+      this.player.next(message);
     }
   }
 }

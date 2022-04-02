@@ -1,4 +1,4 @@
-import ytdl from "ytdl-core";
+import ytdl, { MoreVideoDetails, videoInfo } from "ytdl-core";
 import * as yts from "yt-search";
 import { AppConfig } from "../../../../config/env";
 import { Message } from "discord.js";
@@ -13,13 +13,27 @@ export class SongFinder {
       return {
         title: "NOT FOUND",
         url: AppConfig.defaultSong,
+        duration: 1,
       };
     }
 
+    const songDuration = this.getSongDuration(songInfo);
+
     return {
       url: songUrl,
-      title: songInfo?.videoDetails?.title || "NOT FOUND",
+      title: songInfo?.videoDetails?.title ?? "NOT FOUND",
+      duration: songDuration,
     };
+  }
+
+  private getSongDuration(details: videoInfo) {
+    const seconds = Number(details?.videoDetails?.lengthSeconds);
+
+    if (Number.isNaN(seconds)) {
+      return 1;
+    }
+
+    return seconds;
   }
 
   private async getSongUrl(

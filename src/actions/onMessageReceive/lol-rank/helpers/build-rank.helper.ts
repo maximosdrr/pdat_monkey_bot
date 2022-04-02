@@ -7,7 +7,7 @@ import { RankPointsCalculator } from "./rank-points-calculator.helper";
 
 export class RankBuilder {
   private riotRepository = riotGamesRepository;
-  
+
   private sortRank(playersQueueData: SummonerRankData[]): SummonerRankData[] {
     const sorted = playersQueueData.sort((a, b) => {
       if (a.points > b.points) {
@@ -28,8 +28,6 @@ export class RankBuilder {
     const summonersRankData: SummonerRankData[] = [];
 
     const rankPointsCalculator = new RankPointsCalculator();
-    const rankBuilder = new RankBuilder();
-
     for (const summoner of summoners) {
       console.log(`[${summoner}] Fetching data`);
       const summonerAccountInfo = await this.riotRepository.getSummonerInfo(
@@ -54,9 +52,9 @@ export class RankBuilder {
       const summonerPoints =
         rankPointsCalculator.calculateSummonerPoints(summonerQueueData);
 
-        if(summonerPoints) {
-          summonersRankData.push(summonerPoints);
-        }
+      if (summonerPoints) {
+        summonersRankData.push(summonerPoints);
+      }
     }
 
     return this.sortRank(summonersRankData);

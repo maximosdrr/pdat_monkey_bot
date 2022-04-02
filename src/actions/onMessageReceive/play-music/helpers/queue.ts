@@ -18,7 +18,6 @@ export class SongQueue {
   }
 
   getLength() {
-    console.log(this.songs.length);
     return this.songs.length;
   }
 

@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
+import { helpMessages } from "../constants";
 import { OnMessageReceiveActionCreator } from "../interfaces";
 
 export class LolRankRemoveGuildPlayer implements OnMessageReceiveActionCreator {
@@ -9,12 +10,16 @@ export class LolRankRemoveGuildPlayer implements OnMessageReceiveActionCreator {
 
   constructor(trigger: string) {
     this.actionTrigger = trigger;
+    this.registerHelpMessage();
   }
 
   async execute(message: Message<boolean>) {
     if (message.content.includes(this.actionTrigger)) {
       const guildId = MessageUtils.getGuildId(message);
-      const summonerName = MessageUtils.getArgument(message, "-name");
+      const summonerName = MessageUtils.getArgument(
+        message,
+        this.actionTrigger
+      );
 
       if (!guildId) {
         message.reply(`Guild id not provided`);
@@ -39,5 +44,9 @@ export class LolRankRemoveGuildPlayer implements OnMessageReceiveActionCreator {
       message.reply(`${summonerName} deleted`);
       return;
     }
+  }
+
+  registerHelpMessage() {
+    helpMessages.push(`${this.actionTrigger} => Deleta um jogador no lol rank`);
   }
 }

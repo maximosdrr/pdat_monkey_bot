@@ -18,10 +18,21 @@ export class SongQueue {
   }
 
   getLength() {
+    console.log(this.songs.length);
     return this.songs.length;
   }
 
   getSongs() {
     return this.songs;
+  }
+
+  getSongsAsString() {
+    return this.songs.reduce(
+      (prev, current, i) =>
+        (prev += `${i + 1} - ${current.title} - Duração: ${
+          current.duration
+        } segundos\n`),
+      ""
+    );
   }
 }

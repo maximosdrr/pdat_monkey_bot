@@ -2,6 +2,7 @@ import { Message } from "discord.js";
 import { ISummoner } from "../../../repositories/summoner/summoner.entity";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
+import { helpMessages } from "../constants";
 
 import { OnMessageReceiveActionCreator } from "../interfaces";
 import { RankBuilder } from "./helpers/build-rank.helper";
@@ -15,6 +16,7 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
 
   constructor(actionTrigger: string) {
     this.actionTrigger = actionTrigger;
+    this.registerHelpMessage();
   }
 
   async execute(message: Message<boolean>) {
@@ -34,7 +36,10 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
       }
 
       const playersNames = this.getPlayersNames(summoners.data);
-      const summonersRankData = await this.rankBuilder.buildRank(playersNames, message);
+      const summonersRankData = await this.rankBuilder.buildRank(
+        playersNames,
+        message
+      );
 
       if (!summonersRankData.length) {
         message.reply("No data available yet");
@@ -50,5 +55,11 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
 
   getPlayersNames(players: ISummoner[]) {
     return players.map((p) => p.summonerName);
+  }
+
+  registerHelpMessage() {
+    helpMessages.push(
+      `${this.actionTrigger} => Mostra a pontuação dos jogadores no ranking (Vitorias +3pts, Derrotas -2pts)`
+    );
   }
 }

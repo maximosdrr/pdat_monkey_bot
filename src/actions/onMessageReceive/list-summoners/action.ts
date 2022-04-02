@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
+import { helpMessages } from "../constants";
 import { OnMessageReceiveActionCreator } from "../interfaces";
 import { MessageFormatter } from "./message-formatter";
 
@@ -11,6 +12,7 @@ export class LolRankListPlayers implements OnMessageReceiveActionCreator {
 
   constructor(trigger: string) {
     this.actionTrigger = trigger;
+    this.registerHelpMessage();
   }
 
   async execute(message: Message<boolean>) {
@@ -39,5 +41,11 @@ export class LolRankListPlayers implements OnMessageReceiveActionCreator {
       message.reply(messageResponse);
       return;
     }
+  }
+
+  registerHelpMessage() {
+    helpMessages.push(
+      `${this.actionTrigger} => Lista todos os jogadores cadastrados no ranking`
+    );
   }
 }

@@ -20,8 +20,14 @@ export class SongPlayer {
   constructor(private songQueue: SongQueue) {}
 
   play(message: Message<boolean>, song: ISong) {
+    const playerConnected = this.connectPlayer(message);
+
+    if (!playerConnected) {
+      message.reply(`You should be in a guild voice channel to play your song`);
+      return;
+    }
+
     this.songQueue.addSong(message, song);
-    this.setupPlayer(message);
 
     if (!this.isPlayingSomething()) {
       this.next(message);
@@ -29,9 +35,13 @@ export class SongPlayer {
   }
 
   stop(message: Message<boolean>) {
-    message.reply(`Stopping player`);
-    this.connection.destroy();
-    this.subscription.unsubscribe();
+    try {
+      message.reply(`Stopping player`);
+      this.connection.destroy();
+      this.subscription.unsubscribe();
+    } catch (e) {
+      message.reply(`Cannot stop: ${e?.message ?? "Unknown"}`);
+    }
   }
 
   next(message: Message<boolean>) {
@@ -55,21 +65,28 @@ export class SongPlayer {
     return createAudioResource(stream);
   }
 
-  private setupPlayer(message: Message<boolean>) {
+  private connectPlayer(message: Message<boolean>): boolean {
     if (this.isPlayingSomething()) {
-      return;
+      return true;
     }
 
-    VoiceManager.joinVoiceChannel(message);
+    const isConnected = VoiceManager.joinVoiceChannel(message);
+
+    if (!isConnected) {
+      return false;
+    }
+
     this.connection = VoiceManager.getConnection(message);
     this.subscription = this.connection.subscribe(this.audioPlayer);
 
     this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
-      if (this.songQueue.isEmpty) {
+      if (this.songQueue.isEmpty()) {
         this.stop(message);
       }
 
       this.next(message);
     });
+
+    return true;
   }
 }

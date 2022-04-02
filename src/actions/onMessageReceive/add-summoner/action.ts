@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import { AppConfig } from "../../../config/env";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
 import { helpMessages } from "../constants";
@@ -19,6 +20,13 @@ export class LolRankAddGuildPlayer implements OnMessageReceiveActionCreator {
         message,
         this.actionTrigger
       );
+
+      if (summonerName.includes(AppConfig.commands.prefix)) {
+        message.reply(
+          `You cannot add a summoner name that contains the bot prefix in the name`
+        );
+        return;
+      }
 
       const guildId = MessageUtils.getGuildId(message);
 

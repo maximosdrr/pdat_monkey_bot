@@ -20,14 +20,14 @@ export class GetHelp implements OnMessageReceiveActionCreator {
   }
 
   getMessageContent() {
-    const messageContent = helpMessages.join("\n");
+    const messageContent = helpMessages
+      .map((message) => message.replace(AppConfig.commands.prefix, ""))
+      .join("\n");
 
-    return messageContent.replace(/@/g, "");
+    return messageContent;
   }
 
   registerHelpMessage() {
-    helpMessages.push(
-      `Todos os comandos devem começar com ${AppConfig.commands.prefix}`
-    );
+    helpMessages.push(`Todos os comandos devem começar com `);
   }
 }

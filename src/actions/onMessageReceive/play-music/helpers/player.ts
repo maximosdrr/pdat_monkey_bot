@@ -35,6 +35,8 @@ export class SongPlayer {
   }
 
   stop(message: Message<boolean>) {
+    this.songQueue.clearQueue();
+
     try {
       message.reply(`Stopping player`);
       this.connection.destroy();

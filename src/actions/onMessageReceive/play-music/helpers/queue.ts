@@ -25,6 +25,10 @@ export class SongQueue {
     return this.songs;
   }
 
+  clearQueue() {
+    this.songs = [];
+  }
+
   getSongsAsString() {
     return this.songs.reduce(
       (prev, current, i) =>

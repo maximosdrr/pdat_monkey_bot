@@ -1,8 +1,10 @@
 -- CreateTable
 CREATE TABLE "Summoner" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "summonerName" TEXT NOT NULL,
-    "guildId" TEXT NOT NULL
+    "guildId" TEXT NOT NULL,
+
+    CONSTRAINT "Summoner_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

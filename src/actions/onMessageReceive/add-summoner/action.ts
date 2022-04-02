@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { summonerRepository } from "../../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../utils/message.utils";
+import { helpMessages } from "../constants";
 import { OnMessageReceiveActionCreator } from "../interfaces";
 
 export class LolRankAddGuildPlayer implements OnMessageReceiveActionCreator {
@@ -9,11 +10,16 @@ export class LolRankAddGuildPlayer implements OnMessageReceiveActionCreator {
 
   constructor(trigger: string) {
     this.actionTrigger = trigger;
+    this.registerHelpMessage();
   }
 
   async execute(message: Message<boolean>) {
     if (message.content.includes(this.actionTrigger)) {
-      const summonerName = MessageUtils.getArgument(message, "-name");
+      const summonerName = MessageUtils.getArgument(
+        message,
+        this.actionTrigger
+      );
+
       const guildId = MessageUtils.getGuildId(message);
 
       if (!summonerName || !guildId) {
@@ -34,5 +40,9 @@ export class LolRankAddGuildPlayer implements OnMessageReceiveActionCreator {
       message.reply(`Player ${summonerName} inserted`);
       return;
     }
+  }
+
+  registerHelpMessage() {
+    helpMessages.push(`${this.actionTrigger} => Adiciona jogador no Ranking`);
   }
 }

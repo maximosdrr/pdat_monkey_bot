@@ -10,15 +10,17 @@ import { Message } from "discord.js";
 import ytdl from "ytdl-core";
 import { ISong } from "../interfaces";
 import { VoiceManager } from "./voice-manager";
-import { songQueue } from "../constants";
+import { SongQueue } from "./queue";
 
 export class SongPlayer {
   connection: VoiceConnection;
   subscription: PlayerSubscription;
   audioPlayer = createAudioPlayer();
 
+  constructor(private songQueue: SongQueue) {}
+
   play(message: Message<boolean>, song: ISong) {
-    this.addSongToQueue(message, song);
+    this.songQueue.addSong(message, song);
     this.setupPlayer(message);
 
     if (!this.isPlayingSomething()) {
@@ -33,7 +35,7 @@ export class SongPlayer {
   }
 
   next(message: Message<boolean>) {
-    const song = songQueue.shift();
+    const song = this.songQueue.getNext();
     if (!song) {
       message.reply(`Queue is empty`);
       return;
@@ -42,11 +44,6 @@ export class SongPlayer {
     message.reply(`Now playing ${song.title} [${song.duration} seconds]`);
     const audioResource = this.getAudioResource(song);
     this.audioPlayer.play(audioResource);
-  }
-
-  private addSongToQueue(message: Message<boolean>, song: ISong) {
-    message.reply(`${song.title} added to queue`);
-    songQueue.push(song);
   }
 
   private isPlayingSomething() {
@@ -68,7 +65,7 @@ export class SongPlayer {
     this.subscription = this.connection.subscribe(this.audioPlayer);
 
     this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
-      if (!songQueue.length) {
+      if (this.songQueue.isEmpty) {
         this.stop(message);
       }
 

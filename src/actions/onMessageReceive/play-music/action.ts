@@ -1,11 +1,13 @@
 import { Message } from "discord.js";
 import { OnMessageReceiveActionCreator } from "../interfaces";
 import { SongPlayer } from "./helpers/player";
+import { SongQueue } from "./helpers/queue";
 import { SongFinder } from "./helpers/song-finder";
 
 export class PlayMusic implements OnMessageReceiveActionCreator {
   songFinder = new SongFinder();
-  player = new SongPlayer();
+  songQueue = new SongQueue();
+  player: SongPlayer;
   actionTrigger: string;
   stop: string;
   next: string;
@@ -14,6 +16,7 @@ export class PlayMusic implements OnMessageReceiveActionCreator {
     this.actionTrigger = play;
     this.stop = stop;
     this.next = next;
+    this.player = new SongPlayer(this.songQueue);
   }
 
   async execute(message: Message<boolean>) {

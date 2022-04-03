@@ -63,7 +63,10 @@ export class SongPlayer {
   }
 
   private getAudioResource(song: ISong) {
-    const stream = ytdl(song.url, { filter: "audioonly" });
+    const stream = ytdl(song.url, {
+      filter: "audioonly",
+      highWaterMark: 32768,
+    });
     return createAudioResource(stream);
   }
 

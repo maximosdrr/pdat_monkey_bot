@@ -22,7 +22,9 @@ export class SongPlayer {
     const playerConnected = this.connectPlayer(message);
 
     if (!playerConnected) {
-      message.reply(`You should be in a guild voice channel to play your song`);
+      await message.reply(
+        `You should be in a guild voice channel to play your song`
+      );
       return;
     }
 
@@ -33,26 +35,26 @@ export class SongPlayer {
     }
   }
 
-  stop(message: Message<boolean>) {
+  async stop(message: Message<boolean>) {
     this.songQueue.clearQueue();
 
     try {
-      message.reply(`Stopping player`);
+      await message.reply(`Stopping player`);
       this.connection.destroy();
       this.subscription.unsubscribe();
     } catch (e) {
-      message.reply(`Cannot stop: ${e?.message ?? "Unknown"}`);
+      await message.reply(`Cannot stop: ${e?.message ?? "Unknown"}`);
     }
   }
 
   async next(message: Message<boolean>) {
     const song = this.songQueue.getNext();
     if (!song) {
-      message.reply(`Queue is empty`);
+      await message.reply(`Queue is empty`);
       return;
     }
 
-    message.reply(`Now playing ${song.title} [${song.duration} seconds]`);
+    await message.reply(`Now playing ${song.title} [${song.duration} seconds]`);
     const audioResource = await this.getAudioResource(song);
     this.audioPlayer.play(audioResource);
   }
@@ -83,7 +85,7 @@ export class SongPlayer {
     this.subscription = this.connection.subscribe(this.audioPlayer);
 
     this.audioPlayer.on("error", async (err) => {
-      this.stop(message);
+      await this.stop(message);
 
       await message.channel.send(
         `Error caught when play song, stopping music ${err.message}`
@@ -94,7 +96,7 @@ export class SongPlayer {
 
     this.audioPlayer.on(AudioPlayerStatus.Idle, async () => {
       if (this.songQueue.isEmpty()) {
-        this.stop(message);
+        await this.stop(message);
       }
 
       await this.next(message);

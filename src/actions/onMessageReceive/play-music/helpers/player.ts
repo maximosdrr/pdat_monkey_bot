@@ -92,12 +92,12 @@ export class SongPlayer {
       console.log(err);
     });
 
-    this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
+    this.audioPlayer.on(AudioPlayerStatus.Idle, async () => {
       if (this.songQueue.isEmpty()) {
         this.stop(message);
       }
 
-      this.next(message);
+      await this.next(message);
     });
 
     return true;

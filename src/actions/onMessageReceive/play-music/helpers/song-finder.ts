@@ -1,4 +1,4 @@
-import ytdl, { MoreVideoDetails, videoInfo } from "ytdl-core";
+import ytdl, { videoInfo } from "ytdl-core";
 import * as yts from "yt-search";
 import { AppConfig } from "../../../../config/env";
 import { Message } from "discord.js";

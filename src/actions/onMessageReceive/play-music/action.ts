@@ -27,7 +27,7 @@ export class PlayMusic implements OnMessageReceiveActionCreator {
       const song = await this.songFinder.getSong(this.actionTrigger, message);
 
       if (song) {
-        this.player.play(message, song);
+        await this.player.play(message, song);
       }
     }
 
@@ -36,7 +36,7 @@ export class PlayMusic implements OnMessageReceiveActionCreator {
     }
 
     if (message.content.includes(this.next)) {
-      this.player.next(message);
+      await this.player.next(message);
     }
 
     if (message.content.includes(this.getQueueSongs)) {

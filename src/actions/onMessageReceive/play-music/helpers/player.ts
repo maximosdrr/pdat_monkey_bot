@@ -1,5 +1,4 @@
 import {
-  AudioPlayer,
   AudioPlayerStatus,
   createAudioPlayer,
   createAudioResource,
@@ -7,10 +6,10 @@ import {
   VoiceConnection,
 } from "@discordjs/voice";
 import { Message } from "discord.js";
-import ytdl from "ytdl-core";
 import { ISong } from "../interfaces";
 import { VoiceManager } from "./voice-manager";
 import { SongQueue } from "./queue";
+import play from "play-dl";
 
 export class SongPlayer {
   connection: VoiceConnection;
@@ -19,7 +18,7 @@ export class SongPlayer {
 
   constructor(private songQueue: SongQueue) {}
 
-  play(message: Message<boolean>, song: ISong) {
+  async play(message: Message<boolean>, song: ISong) {
     const playerConnected = this.connectPlayer(message);
 
     if (!playerConnected) {
@@ -30,7 +29,7 @@ export class SongPlayer {
     this.songQueue.addSong(message, song);
 
     if (!this.isPlayingSomething()) {
-      this.next(message);
+      await this.next(message);
     }
   }
 
@@ -46,7 +45,7 @@ export class SongPlayer {
     }
   }
 
-  next(message: Message<boolean>) {
+  async next(message: Message<boolean>) {
     const song = this.songQueue.getNext();
     if (!song) {
       message.reply(`Queue is empty`);
@@ -54,7 +53,7 @@ export class SongPlayer {
     }
 
     message.reply(`Now playing ${song.title} [${song.duration} seconds]`);
-    const audioResource = this.getAudioResource(song);
+    const audioResource = await this.getAudioResource(song);
     this.audioPlayer.play(audioResource);
   }
 
@@ -62,8 +61,10 @@ export class SongPlayer {
     return this.audioPlayer.state.status === AudioPlayerStatus.Playing;
   }
 
-  private getAudioResource(song: ISong) {
-    const stream = ytdl(song.url, { filter: "audioonly" });
+  private async getAudioResource(song: ISong) {
+    const { stream } = await play.stream(song.url, {
+      discordPlayerCompatibility: true,
+    });
     return createAudioResource(stream);
   }
 

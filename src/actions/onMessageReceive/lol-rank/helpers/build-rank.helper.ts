@@ -36,7 +36,6 @@ export class RankBuilder {
 
       if (!summonerAccountInfo) {
         message.reply(`No data available for ${summoner}`);
-        return [];
       }
 
       const summonerQueueData = await this.riotRepository.getSummonerLeagueData(

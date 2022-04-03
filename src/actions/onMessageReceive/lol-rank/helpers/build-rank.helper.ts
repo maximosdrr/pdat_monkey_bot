@@ -44,7 +44,6 @@ export class RankBuilder {
 
       if (!summonerQueueData) {
         message.reply(`No queue data available from ${summoner}`);
-        return [];
       }
 
       console.log(`[ ${summoner} ] Calculating ranking points`);

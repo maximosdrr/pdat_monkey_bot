@@ -22,7 +22,7 @@ export class GetQueueInfo implements OnMessageReceiveActionCreator {
     const message = this.songQueue.getSongsAsString();
 
     if (!message.length) {
-      return "Queue is empty";
+      return "No more songs ahead";
     }
 
     return message;

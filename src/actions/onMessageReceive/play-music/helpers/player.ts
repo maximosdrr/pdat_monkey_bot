@@ -51,11 +51,13 @@ export class SongPlayer {
     const song = this.songQueue.getNext();
     if (!song) {
       await message.reply(`Queue is empty`);
+      await this.stop(message);
       return;
     }
 
     await message.reply(`Now playing ${song.title} [${song.duration} seconds]`);
-    const audioResource = await this.getAudioResource(song);
+    const audioResource = await this.getAudioResource(song, message);
+
     this.audioPlayer.play(audioResource);
   }
 
@@ -63,11 +65,16 @@ export class SongPlayer {
     return this.audioPlayer.state.status === AudioPlayerStatus.Playing;
   }
 
-  private async getAudioResource(song: ISong) {
-    const { stream } = await play.stream(song.url, {
+  private async getAudioResource(song: ISong, message: Message<boolean>) {
+    const { stream, type } = await play.stream(song.url, {
       discordPlayerCompatibility: true,
     });
-    return createAudioResource(stream);
+
+    stream.on("end", () => {
+      this.next(message);
+    });
+
+    return createAudioResource(stream, { inputType: type });
   }
 
   private connectPlayer(message: Message<boolean>): boolean {
@@ -93,15 +100,6 @@ export class SongPlayer {
 
       console.log(err);
     });
-
-    this.audioPlayer.on(AudioPlayerStatus.Idle, async () => {
-      if (this.songQueue.isEmpty()) {
-        await this.stop(message);
-      }
-
-      await this.next(message);
-    });
-
     return true;
   }
 }

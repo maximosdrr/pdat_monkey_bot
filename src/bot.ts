@@ -1,7 +1,7 @@
 import DiscordJs, { Client, Intents } from "discord.js";
 import { AppConfig } from "./config/env";
-import { OnMessageReceiveActionCreator } from "./actions/onMessageReceive/interfaces";
-import onMessageReceiveActions from "./actions/onMessageReceive";
+import { OnMessageReceiveActionCreator } from "./shared/interfaces";
+import Actions from "./bootstrap";
 
 export class Bot {
   public run() {
@@ -13,7 +13,7 @@ export class Bot {
       ],
     });
 
-    this.registerOnMessageReceiveActions(client, onMessageReceiveActions);
+    this.registerOnMessageReceiveActions(client, Actions);
 
     client.login(AppConfig.botToken);
 

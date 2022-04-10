@@ -21,15 +21,15 @@ import { ListSummonerMessageFormatter } from "./modules/lol-rank/utils/list-summ
 import { StopMusic } from "./modules/music-player/actions/stop";
 import { SkipMusic } from "./modules/music-player/actions/next";
 import { GetQueueInfo } from "./modules/music-player/actions/get-queue-info";
+import { PlayYoutubePlayList } from "./modules/music-player/actions/play-list/play-list.action";
 
 const prefix = AppConfig.commands.prefix;
 const commands = AppConfig.commands;
-const queueSongs: ISong[] = [];
 const videoDetailsSeeker = new VideoDetailsSeeker();
 const youtubeSearch = new YoutubeSearch();
 const youtubeStreamProvider = new YoutubeStreamProvider();
 const voiceManager = new VoiceManager();
-const songQueue = new SongQueue(queueSongs);
+const songQueue = new SongQueue();
 const songFinder = new SongFinder(videoDetailsSeeker, youtubeSearch);
 const summonerRepository = new SummonerRepository();
 const riotRepository = new RiotGamesRepository();
@@ -68,6 +68,12 @@ const Actions = [
     summonerRepository,
     rankBuilder,
     lolRankMessageFormatter
+  ),
+  new PlayYoutubePlayList(
+    `${prefix}${commands.playYoutubePlaylist}`,
+    songPlayer,
+    songFinder,
+    songQueue
   ),
 ];
 

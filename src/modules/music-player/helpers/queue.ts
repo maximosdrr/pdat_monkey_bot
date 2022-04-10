@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { ISong } from "../interfaces/interfaces";
 
 export class SongQueue {
-  constructor(private songs: ISong[]) {}
+  songs: ISong[] = [];
 
   addSong(song: ISong) {
     this.songs.push(song);
@@ -26,6 +26,10 @@ export class SongQueue {
 
   clearQueue() {
     this.songs = [];
+  }
+
+  pushBatch(songs: ISong[]) {
+    this.songs = [...this.songs, ...songs];
   }
 
   getSongsAsString() {

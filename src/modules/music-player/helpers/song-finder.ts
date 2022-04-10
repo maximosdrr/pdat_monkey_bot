@@ -1,5 +1,4 @@
 import { AppConfig } from "../../../config/env";
-import { Message } from "discord.js";
 import { ISong } from "../interfaces/interfaces";
 import { VideoDetailsSeeker } from "../../../libs/video-details-seeker";
 import { YoutubeSearch } from "../../../libs/youtube-search";
@@ -25,6 +24,28 @@ export class SongFinder {
     } catch (e) {
       throw new Error(
         `Cannot add this song to queue reason ${e.message ?? "Unknown"}`
+      );
+    }
+  }
+
+  async getPlaylistSongs(link: string): Promise<ISong[]> {
+    try {
+      const videos = await this.youtubeSearch.getPlaylist(link);
+
+      const songs: ISong[] = [];
+
+      for (const video of videos) {
+        songs.push({
+          duration: video.durationInSec,
+          title: video.title,
+          url: video.url,
+        });
+      }
+
+      return songs;
+    } catch (e) {
+      throw new Error(
+        `Cannot find this play list, reason: ${e.message ?? "Unknown"}`
       );
     }
   }

@@ -10,22 +10,32 @@ export class GetQueueInfo implements OnMessageReceiveActionCreator {
   }
 
   async execute(message: Message<boolean>) {
-    if (!this.shouldExecute(message)) {
-      return;
-    }
+    try {
+      if (!this.shouldExecute(message)) {
+        return;
+      }
 
-    const replyMessage = this.getReplyMessage();
-    await message.reply(replyMessage);
+      const replyMessage = this.getReplyMessage();
+      await message.reply(replyMessage);
+    } catch (e) {
+      await message.reply(`Something went wrong: ${e?.message ?? "unknown"}`);
+    }
   }
 
   getReplyMessage() {
-    const message = this.songQueue.getSongsAsString();
+    let message = this.songQueue.getSongsAsString();
+    message = this.sliceMessage(message);
 
     if (!message.length) {
       return "No more songs ahead";
     }
 
     return message;
+  }
+
+  sliceMessage(message: string) {
+    const messageSlice = message.slice(0, 1990);
+    return `${messageSlice}\n...`;
   }
 
   shouldExecute(message: Message<boolean>) {

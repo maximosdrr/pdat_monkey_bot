@@ -17,6 +17,7 @@ export const AppConfig = {
     playMusic: process.env.PLAY_MUSIC,
     skipMusic: process.env.SKIP_MUSIC,
     stopMusic: process.env.STOP_MUSIC,
+    playYoutubePlaylist: process.env.PLAY_YOUTUBE_PLAYLIST,
     getQueueSongs: process.env.GET_QUEUE_SONGS,
     help: process.env.GET_HELP,
   },

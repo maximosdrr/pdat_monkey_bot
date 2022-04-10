@@ -6,6 +6,8 @@ export class MessageUtils {
   }
 
   static getArgument(message: Message<boolean>, arg: string) {
-    return message?.content?.split(arg)[1];
+    return message?.content
+      ?.toLocaleLowerCase()
+      .split(arg.toLocaleLowerCase())[1];
   }
 }

@@ -1,12 +1,10 @@
 import { Message } from "discord.js";
 import { AppConfig } from "../../../../config/env";
-import { OnMessageReceiveActionCreator } from "../../../../shared/interfaces";
+import { Action } from "../../../../shared/action.abstract";
 
-export class GetHelp implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class GetHelp extends Action {
   constructor(trigger: string) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -48,9 +46,5 @@ export class GetHelp implements OnMessageReceiveActionCreator {
     ];
 
     return messageArray.join("\n");
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 }

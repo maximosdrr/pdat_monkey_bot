@@ -3,23 +3,19 @@ import { ISummoner } from "../../repositories/summoner/summoner.entity";
 import { SummonerRepository } from "../../repositories/summoner/summoner.repository";
 import { MessageUtils } from "../../../../utils/message.utils";
 
-import {
-  IParamsValidationResult,
-  OnMessageReceiveActionCreator,
-} from "../../../../shared/interfaces";
+import { IParamsValidationResult } from "../../../../shared/interfaces";
 import { LolRankMessageFormatter } from "../../utils/lol-rank-message-formatter";
 import { RankBuilder } from "../../utils/build-rank.helper";
+import { Action } from "../../../../shared/action.abstract";
 
-export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class GuildLeagueOfLegendsRank extends Action {
   constructor(
     actionTrigger: string,
     private summonerRepository: SummonerRepository,
     private rankBuilder: RankBuilder,
     private messageFormatter: LolRankMessageFormatter
   ) {
-    this.actionTrigger = actionTrigger;
+    super(actionTrigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -61,10 +57,6 @@ export class GuildLeagueOfLegendsRank implements OnMessageReceiveActionCreator {
 
   getPlayersNames(players: ISummoner[]) {
     return players.map((p) => p.summonerName);
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 
   validateParams(guildId: string): IParamsValidationResult {

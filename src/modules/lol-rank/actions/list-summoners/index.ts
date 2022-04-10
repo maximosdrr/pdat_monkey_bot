@@ -1,21 +1,17 @@
 import { Message } from "discord.js";
 import { MessageUtils } from "../../../../utils/message.utils";
-import {
-  IParamsValidationResult,
-  OnMessageReceiveActionCreator,
-} from "../../../../shared/interfaces";
+import { IParamsValidationResult } from "../../../../shared/interfaces";
 import { ListSummonerMessageFormatter } from "../../utils/list-summoner-formatter";
 import { SummonerRepository } from "../../repositories/summoner/summoner.repository";
+import { Action } from "../../../../shared/action.abstract";
 
-export class LolRankListPlayers implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class LolRankListPlayers extends Action {
   constructor(
     trigger: string,
     private summonerRepository: SummonerRepository,
     private formatter: ListSummonerMessageFormatter
   ) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -47,10 +43,6 @@ export class LolRankListPlayers implements OnMessageReceiveActionCreator {
 
     message.reply(messageResponse);
     return;
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 
   validateParams(guildId: string): IParamsValidationResult {

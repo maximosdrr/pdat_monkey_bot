@@ -1,24 +1,20 @@
 import { InternalDiscordGatewayAdapterCreator, Message } from "discord.js";
-import {
-  IParamsValidationResult,
-  OnMessageReceiveActionCreator,
-} from "../../../../shared/interfaces";
+import { Action } from "../../../../shared/action.abstract";
+import { IParamsValidationResult } from "../../../../shared/interfaces";
 import { MessageUtils } from "../../../../utils/message.utils";
 import { SongQueue } from "../../helpers/queue";
 import { SongFinder } from "../../helpers/song-finder";
 import { SongPlayer } from "../../helpers/song-player";
 import { ISong } from "../../interfaces/interfaces";
 
-export class PlayYoutubePlayList implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class PlayYoutubePlayList extends Action {
   constructor(
     trigger: string,
     private player: SongPlayer,
     private songFinder: SongFinder,
     private queueManager: SongQueue
   ) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -54,10 +50,6 @@ export class PlayYoutubePlayList implements OnMessageReceiveActionCreator {
     } catch (e) {
       await message.reply(`Something went wrong ${e?.message ?? "Unknown"}`);
     }
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 
   validateParams(

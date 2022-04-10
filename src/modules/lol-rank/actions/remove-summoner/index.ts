@@ -1,16 +1,12 @@
 import { Message } from "discord.js";
-import {
-  IParamsValidationResult,
-  OnMessageReceiveActionCreator,
-} from "../../../../shared/interfaces";
+import { Action } from "../../../../shared/action.abstract";
+import { IParamsValidationResult } from "../../../../shared/interfaces";
 import { MessageUtils } from "../../../../utils/message.utils";
 import { SummonerRepository } from "../../repositories/summoner/summoner.repository";
 
-export class LolRankRemoveGuildPlayer implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class LolRankRemoveGuildPlayer extends Action {
   constructor(trigger: string, private summonerRepository: SummonerRepository) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -43,10 +39,6 @@ export class LolRankRemoveGuildPlayer implements OnMessageReceiveActionCreator {
 
     message.reply(`${summonerName} deleted`);
     return;
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 
   validateParams(

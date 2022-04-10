@@ -1,12 +1,12 @@
 import { Message } from "discord.js";
-import { OnMessageReceiveActionCreator } from "../../../../shared/interfaces";
+import { Action } from "../../../../shared/action.abstract";
 import { SongQueue } from "../../helpers/queue";
 
-export class GetQueueInfo implements OnMessageReceiveActionCreator {
+export class GetQueueInfo extends Action {
   actionTrigger: string;
 
   constructor(trigger: string, private songQueue: SongQueue) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -36,9 +36,5 @@ export class GetQueueInfo implements OnMessageReceiveActionCreator {
   sliceMessage(message: string) {
     const messageSlice = message.slice(0, 1990);
     return `${messageSlice}\n...`;
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 }

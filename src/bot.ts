@@ -1,7 +1,7 @@
 import DiscordJs, { Client, Intents } from "discord.js";
 import { AppConfig } from "./config/env";
-import { OnMessageReceiveActionCreator } from "./shared/interfaces";
 import Actions from "./bootstrap";
+import { Action } from "./shared/action.abstract";
 
 export class Bot {
   public run() {
@@ -20,10 +20,7 @@ export class Bot {
     console.log("Pdat team monkey is running 🐵🐵");
   }
 
-  private registerOnMessageReceiveActions(
-    client: Client,
-    actions: OnMessageReceiveActionCreator[]
-  ) {
+  private registerOnMessageReceiveActions(client: Client, actions: Action[]) {
     for (const action of actions) {
       client.on("messageCreate", (message) => action.execute(message));
     }

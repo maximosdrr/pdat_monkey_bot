@@ -1,22 +1,18 @@
 import { InternalDiscordGatewayAdapterCreator, Message } from "discord.js";
 import { SongPlayer } from "../../helpers/song-player";
-import {
-  IParamsValidationResult,
-  OnMessageReceiveActionCreator,
-} from "../../../../shared/interfaces";
+import { IParamsValidationResult } from "../../../../shared/interfaces";
 import { SongFinder } from "../../helpers/song-finder";
 import { MessageUtils } from "../../../../utils/message.utils";
 import { ISong } from "../../interfaces/interfaces";
+import { Action } from "../../../../shared/action.abstract";
 
-export class PlayMusic implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class PlayMusic extends Action {
   constructor(
     actionTrigger: string,
     private songFinder: SongFinder,
     private player: SongPlayer
   ) {
-    this.actionTrigger = actionTrigger;
+    super(actionTrigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -58,10 +54,6 @@ export class PlayMusic implements OnMessageReceiveActionCreator {
     }
 
     return `added ${song.title} to queue - Duration ${song.duration} seconds`;
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 
   validateParams(

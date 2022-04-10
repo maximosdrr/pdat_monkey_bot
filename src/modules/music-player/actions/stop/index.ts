@@ -1,12 +1,10 @@
 import { Message } from "discord.js";
 import { SongPlayer } from "../../helpers/song-player";
-import { OnMessageReceiveActionCreator } from "../../../../shared/interfaces";
+import { Action } from "../../../../shared/action.abstract";
 
-export class StopMusic implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class StopMusic extends Action {
   constructor(trigger: string, private player: SongPlayer) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -20,9 +18,5 @@ export class StopMusic implements OnMessageReceiveActionCreator {
     } catch (e) {
       await message.reply(`Something went wrong ${e.message}`);
     }
-  }
-
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
   }
 }

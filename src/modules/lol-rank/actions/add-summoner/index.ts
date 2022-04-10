@@ -1,17 +1,13 @@
 import { Message } from "discord.js";
 import { AppConfig } from "../../../../config/env";
-import {
-  IParamsValidationResult,
-  OnMessageReceiveActionCreator,
-} from "../../../../shared/interfaces";
+import { Action } from "../../../../shared/action.abstract";
+import { IParamsValidationResult } from "../../../../shared/interfaces";
 import { MessageUtils } from "../../../../utils/message.utils";
 import { SummonerRepository } from "../../repositories/summoner/summoner.repository";
 
-export class LolRankAddGuildPlayer implements OnMessageReceiveActionCreator {
-  actionTrigger: string;
-
+export class LolRankAddGuildPlayer extends Action {
   constructor(trigger: string, private summonerRepository: SummonerRepository) {
-    this.actionTrigger = trigger;
+    super(trigger);
   }
 
   async execute(message: Message<boolean>) {
@@ -46,15 +42,11 @@ export class LolRankAddGuildPlayer implements OnMessageReceiveActionCreator {
     return;
   }
 
-  shouldExecute(message: Message<boolean>) {
-    return message.content.includes(this.actionTrigger);
-  }
-
   validateParams(
     summonerName: string,
     guildId: string
   ): IParamsValidationResult {
-    if (summonerName.includes(AppConfig.commands.prefix)) {
+    if (summonerName?.includes(AppConfig.commands.prefix)) {
       return {
         isValid: false,
         validationMessage: "Summoner name cannot include the bot prefix",

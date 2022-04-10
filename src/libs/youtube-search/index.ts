@@ -7,15 +7,14 @@ export class YoutubeSearch {
     return yts.search(target);
   }
 
-  async searchPlaylist(url: string): Promise<ISearchResult> {
-    return yts.search(url);
-  }
-
   async getPlaylist(url: string): Promise<YouTubeVideo[]> {
     try {
-      const playlist = await play.playlist_info(url);
+      console.log(url);
+      const playlist = await play.playlist_info(url.replace(" ", ""));
+      console.log("playlist", playlist);
       return await playlist.all_videos();
     } catch (e) {
+      console.log(e);
       throw new Error("Cannot get playlist videos");
     }
   }

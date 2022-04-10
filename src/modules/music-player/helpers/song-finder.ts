@@ -31,7 +31,6 @@ export class SongFinder {
   async getPlaylistSongs(link: string): Promise<ISong[]> {
     try {
       const videos = await this.youtubeSearch.getPlaylist(link);
-
       const songs: ISong[] = [];
 
       for (const video of videos) {

@@ -9,8 +9,8 @@ export abstract class Action {
   }
 
   shouldExecute(message: Message<boolean>) {
-    const triggerContent = this.actionTrigger.toLocaleLowerCase();
-    const messageContent = message.content.toLocaleLowerCase();
+    const triggerContent = this.actionTrigger;
+    const messageContent = message.content;
 
     return messageContent.includes(triggerContent);
   }

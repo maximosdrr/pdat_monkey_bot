@@ -9,9 +9,7 @@ export class YoutubeSearch {
 
   async getPlaylist(url: string): Promise<YouTubeVideo[]> {
     try {
-      console.log(url);
       const playlist = await play.playlist_info(url.replace(" ", ""));
-      console.log("playlist", playlist);
       return await playlist.all_videos();
     } catch (e) {
       console.log(e);

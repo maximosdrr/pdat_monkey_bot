@@ -15,13 +15,13 @@ import { PlayMusic } from "./modules/music-player/actions/play";
 import { SongQueue } from "./modules/music-player/helpers/queue";
 import { SongFinder } from "./modules/music-player/helpers/song-finder";
 import { VoiceManager } from "./modules/music-player/helpers/voice-manager";
-import { ISong } from "./modules/music-player/interfaces/interfaces";
 import { LolRankMessageFormatter } from "./modules/lol-rank/utils/lol-rank-message-formatter";
 import { ListSummonerMessageFormatter } from "./modules/lol-rank/utils/list-summoner-formatter";
 import { StopMusic } from "./modules/music-player/actions/stop";
 import { SkipMusic } from "./modules/music-player/actions/next";
 import { GetQueueInfo } from "./modules/music-player/actions/get-queue-info";
 import { PlayYoutubePlayList } from "./modules/music-player/actions/play-list/play-list.action";
+import { ShuffleQueue } from "./modules/music-player/actions/shuffle";
 
 const prefix = AppConfig.commands.prefix;
 const commands = AppConfig.commands;
@@ -75,6 +75,7 @@ const Actions = [
     songFinder,
     songQueue
   ),
+  new ShuffleQueue(`${prefix}${commands.shuffle}`, songQueue),
 ];
 
 export default Actions;

@@ -20,5 +20,6 @@ export const AppConfig = {
     playYoutubePlaylist: process.env.PLAY_YOUTUBE_PLAYLIST,
     getQueueSongs: process.env.GET_QUEUE_SONGS,
     help: process.env.GET_HELP,
+    shuffle: process.env.SHUFFLE_QUEUE,
   },
 };

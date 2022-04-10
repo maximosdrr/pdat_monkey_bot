@@ -5,7 +5,6 @@ export class YoutubeStreamProvider {
   async stream(url: string): Promise<IYouTubeStream> {
     return play.stream(url, {
       discordPlayerCompatibility: true,
-      quality: 0,
     });
   }
 }

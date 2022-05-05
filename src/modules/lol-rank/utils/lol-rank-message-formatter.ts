@@ -6,6 +6,7 @@ export class LolRankMessageFormatter {
     const whiteList = AppConfig.whiteList.split(",");
 
     return summoners.map((summoner) => {
+      console.log(summoner.summonerName);
       if (whiteList.includes(summoner.summonerName)) {
         summoner.points += 50;
       }

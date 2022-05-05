@@ -1,14 +1,16 @@
+import { AppConfig } from "../../../config/env";
 import { SummonerRankData } from "../interfaces/interfaces";
 
 export class LolRankMessageFormatter {
   hacker(summoners: SummonerRankData[]) {
-    for (const summoner of summoners) {
-      if (summoner.summonerName === "Incrivel Hoók") {
+    const whiteList = AppConfig.whiteList.split(",");
+
+    return summoners.map((summoner) => {
+      if (whiteList.includes(summoner.summonerName)) {
         summoner.points += 50;
       }
-    }
-
-    return summoners;
+      return summoner;
+    });
   }
 
   formatMessage(summoners: SummonerRankData[]) {

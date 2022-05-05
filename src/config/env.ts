@@ -7,6 +7,7 @@ export const AppConfig = {
   riotApiKey: process.env.RIOT_API_KEY,
   brRiotBaseUrl: process.env.BR_RIOT_GAMES_BASE_URL,
   defaultSong: process.env.DEFAULT_SONG,
+  whiteList: process.env.WHITE_LIST,
 
   commands: {
     prefix: process.env.BOT_PREFIX,

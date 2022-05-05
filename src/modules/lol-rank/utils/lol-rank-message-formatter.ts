@@ -4,6 +4,7 @@ import { SummonerRankData } from "../interfaces/interfaces";
 export class LolRankMessageFormatter {
   hacker(summoners: SummonerRankData[]) {
     const whiteList = AppConfig.whiteList.split(",");
+    console.log(whiteList);
 
     return summoners.map((summoner) => {
       console.log(summoner.summonerName);
